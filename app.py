@@ -45,7 +45,7 @@ def plot_wordcloud(top_n_words):
 
 # 纵向柱状图
 def plot_bar_chart_vertical(top_n_words):
-    # plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']  # 设置中文显示
+    plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']  # 设置中文显示
     data = {'关键词': list(top_n_words.keys()), '词频': list(top_n_words.values())}
     df = pd.DataFrame(data)
     df = df.sort_values(by='词频', ascending=False)  # 降序排列数据
@@ -60,7 +60,7 @@ def plot_bar_chart_vertical(top_n_words):
 
 # 绘制横向柱状图
 def plot_bar_chart_horizontal(top_n_words):
-    # plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']  # 设置中文显示
+    plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']  # 设置中文显示
     data = {'关键词': list(top_n_words.keys()), '词频': list(top_n_words.values())}
     df = pd.DataFrame(data)
     df = df.sort_values(by='词频', ascending=True)  # 升序排列数据
@@ -75,7 +75,7 @@ def plot_bar_chart_horizontal(top_n_words):
 
 # 折线图
 def plot_line_chart(top_n_words):
-    # plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']  # 设置中文显示
+    plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']  # 设置中文显示
     data = {'关键词': list(top_n_words.keys()), '词频': list(top_n_words.values())}
     df = pd.DataFrame(data)
 
@@ -89,7 +89,7 @@ def plot_line_chart(top_n_words):
 
 # 散点图
 def plot_scatter_chart(top_n_words):
-    # plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']  # 设置中文显示
+    plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']  # 设置中文显示
     data = {'关键词': list(top_n_words.keys()), '词频': list(top_n_words.values())}
     df = pd.DataFrame(data)
 
@@ -103,7 +103,7 @@ def plot_scatter_chart(top_n_words):
 
 # 绘制饼状图
 def plot_pie_chart(top_n_words):
-    # plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']  # 设置中文显示
+    plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']  # 设置中文显示
 
     labels = list(top_n_words.keys())
     sizes = list(top_n_words.values())
@@ -123,7 +123,7 @@ def plot_pie_chart(top_n_words):
 
 # 创建一个新的函数 plot_box_plot 来绘制箱线图
 def plot_box_plot(top_n_words):
-    # plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']  # 设置中文显示
+    plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']  # 设置中文显示
     data = {'关键词': list(top_n_words.keys()), '词频': list(top_n_words.values())}
     df = pd.DataFrame(data)
 
