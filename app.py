@@ -147,6 +147,7 @@ def plot_box_plot(top_n_words):
 
 # 主函数
 def main():
+    st.set_option('encodeing','utf-8')
     st.title('网页词频分析器')
 
     # 输入 URL
