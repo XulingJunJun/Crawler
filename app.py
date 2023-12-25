@@ -1,4 +1,3 @@
-# streamlit run app.py
 import os
 from bs4 import BeautifulSoup
 import streamlit as st
@@ -9,6 +8,7 @@ import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 import jieba
 import seaborn as sns
+from collections import Counter
 
 
 # 获取页面内容并解析词语
@@ -27,6 +27,37 @@ def get_words(url):
     text = soup.get_text()
     return text
 
+#对文本分词，统计词频
+def tokenize_and_count(text):
+    #使用jieba进行中文分词，排除标点符号和其他没有意义的中文字
+    words = [word for word in jieba.lcut(text) if word.isalnum() and len(word) > 1]
+    # 统计词频
+    top_n_words = Counter(words)
+
+    return top_n_words
+
+# 保存高频词信息为文件()
+def save_word_frequency(top_n_words,base_file_name='news'):
+    # 设置保存文件路径,默认位置位置为c盘.
+    output_folder = 'C:\output_files'
+    os.makedirs(output_folder, exist_ok=True)  
+
+    file_number = 1
+    while os.path.exists(os.path.join(output_folder, f'{base_file_name}{file_number}.txt')):
+        file_number += 1
+
+    output_file = os.path.join(output_folder, f'{base_file_name}{file_number}.txt')
+
+    with open(output_file, 'w', encoding='utf-8') as file:
+        file.write("词语,出现次数,频率\n")
+        total_words = sum(top_n_words.values())
+        for word, count in top_n_words.most_common():
+            frequency = count / total_words
+            file.write(f'{word},{count},{frequency:.4f}\n')
+    
+    st.success(f'成功将页面文本保存为文件{output_file}')
+
+
 
 # 提取正文文本，以utf-8编码写入txt文件
 def extract_and_write_text(text, base_file_name='news'):
@@ -34,10 +65,10 @@ def extract_and_write_text(text, base_file_name='news'):
     os.makedirs(output_folder, exist_ok=True)  
 
     file_number = 1
-    while os.path.exists(os.path.join(output_folder, f'{base_file_name}_{file_number}.txt')):
+    while os.path.exists(os.path.join(output_folder, f'{base_file_name}{file_number}.txt')):
         file_number += 1
 
-    output_file = os.path.join(output_folder, f'{base_file_name}_{file_number}.txt')
+    output_file = os.path.join(output_folder, f'{base_file_name}{file_number}.txt')
 
     with open(output_file, 'w', encoding='utf-8') as file:
         file.write(text)
@@ -161,12 +192,9 @@ def main():
         text = get_words(url) 
         # 设置中文显示
         plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']  
+        #对文本分词，统计词频
+        word_frequency = tokenize_and_count(text)
 
-        # 使用jieba进行中文分词，排除标点符号和其他没有意义的中文字
-        words = [word for word in jieba.lcut(text) if word.isalnum() and len(word) > 1]
-
-        # 获取关键词的词频
-        word_frequency = Counter(words)
         # 获取词语种类数.
         word_counts = len(word_frequency)
 
@@ -184,10 +212,12 @@ def main():
         col1, col2 = st.columns([1, 1])
 
         # 提取正文文本并写入文件
-        col1.button('提取正文文本并写入文件', on_click=lambda: extract_and_write_text(text))
+        col1.button('提取正文文本保存为文件', on_click=lambda: extract_and_write_text(text))
+        # 提取高频词信息并写入文件
+        col2.button('提取高频词保存为文件', on_click=lambda: save_word_frequency(word_frequency))
 
         # 选择词频统计方式
-        chart_type = col2.selectbox('选择可视化方式', ['词云图', '横向柱状图', '饼状图', '直方图', '折线图', '散点图',"箱线图"])
+        chart_type = st.selectbox('选择可视化方式', ['词云图', '横向柱状图', '饼状图', '直方图', '折线图', '散点图',"箱线图"])
 
         # 根据选择的统计方式显示相应图表
         st.subheader(chart_type)
